@@ -7,3 +7,10 @@ Contains:
 - Tasks 1-14 answered.
 - Task 15 skipped due to us not having covered the topic in class very well yet.
 - Task 16 semi-answered.
+
+Contributions:
+- Tasks 1-4 done collectively as a group
+- Tasks 5, 6, 16 done by Patrick
+- Tasks 7, 11, 14 done by Nikolaj
+- Tasks 8, 9, 13 done by David
+- Tasks 10, 12 done by Jenny
