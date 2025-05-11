@@ -65,3 +65,4 @@ def show_problem_formulation():
     Reflect on data collection, feature selection, model performance, or Streamlit implementation.
     """)
 
+show_problem_formulation()

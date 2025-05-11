@@ -32,3 +32,5 @@ def explain(image_bytes, prompt):
         }]
     )
     return response['message']['content'] # Adapt if format differs
+
+participant_analyzer()

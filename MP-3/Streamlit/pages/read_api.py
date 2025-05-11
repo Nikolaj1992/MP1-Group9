@@ -3,6 +3,15 @@ import json
 import streamlit as st
 import os
 
+import sys
+import platform
+
+st.set_page_config(page_title="Read Api", page_icon="📊")
+
+st.title("Read API")
+st.subheader("Eurovision API Data Analyzer", divider='rainbow')
+
+
 def readAPI(url, params, headers, filepath):
     # Check if file already exists
     if os.path.exists(filepath):
@@ -27,7 +36,6 @@ def readAPI(url, params, headers, filepath):
         return None
 
 def fetch_eurovision_data():
-    st.title("Eurovision API Data Analyzer")
 
     # Year input
     year = st.number_input("Enter a Eurovision year (e.g. 2024):", min_value=1956, max_value=2100, value=2024, step=1)
@@ -66,3 +74,5 @@ def fetch_eurovision_data():
                 st.write("Available fields:")
                 for key, value in data.items():
                     st.write(f"**{key}**: {value}")
+
+fetch_eurovision_data()
