@@ -17,17 +17,13 @@ import streamlit.components.v1 as components
 from streamlit.components.v1 import html
 
 import kaleido
-
-
-
-
 import platform
 
 
 
 
 
-st.title("BI Playground")
+st.title("Data Exploration")
 st.subheader("Operations with Tabular Data", divider='rainbow')
 st.sidebar.header("Tabular Data")
 st.write(
