@@ -4,18 +4,24 @@ import folium
 from streamlit_folium import folium_static
 
 # -------------------------
-# Load Data
+# App Title and Instructions
 # -------------------------
+st.set_page_config(page_title="Eurovision Ranking Map", layout="wide")
 st.title("🎤 Eurovision Ranking Map")
+st.markdown("Upload a CSV with `year`, `country`, and `final_place` columns to see how countries ranked on the map.")
 
-uploaded_file = st.file_uploader("Upload your Eurovision CSV", type="csv")
+# -------------------------
+# Upload CSV
+# -------------------------
+uploaded_file = st.file_uploader("📁 Upload Eurovision CSV", type="csv")
 if not uploaded_file:
+    st.info("Please upload a file to continue.")
     st.stop()
 
 df = pd.read_csv(uploaded_file)
 
 # -------------------------
-# Country Coordinates (expand as needed)
+# Coordinates for Countries
 # -------------------------
 country_coords = {
     "Albania": [41.3275, 19.8189],
@@ -68,33 +74,104 @@ country_coords = {
     "Ukraine": [50.4501, 30.5234],
     "United Kingdom": [51.5074, -0.1278],
     "Yugoslavia": [44.7866, 20.4489]
-    # Add more countries as needed
 }
 
+# Define a color for each style
+style_colors = {
+    "pop": "pink",
+    "ballad": "purple",
+    "traditional": "green",
+    "rock": "red",
+    "dance": "orange"
+}
 # -------------------------
-# UI Controls
+# Sidebar Filters
 # -------------------------
-year = st.selectbox("Select year", sorted(df["year"].unique(), reverse=True))
-max_rank = st.slider("Show countries ranked up to place:", min_value=1, max_value=26, value=10)
-
+st.sidebar.header("🧭 Filters")
+year = st.sidebar.selectbox("Select Year", sorted(df["year"].unique(), reverse=True))
+max_rank = st.sidebar.slider("Show countries ranked up to:", 1, 26, 10)
+use_style_colors = st.sidebar.checkbox("🎨 Use music style colors", value=True)
 # -------------------------
-# Filter Data
+# Filtered Data
 # -------------------------
 filtered_df = df[(df["year"] == year) & (df["final_place"] <= max_rank)]
+
+if filtered_df.empty:
+    st.warning("No data for selected year and rank range.")
+    st.stop()
 
 # -------------------------
 # Build Map
 # -------------------------
 m = folium.Map(location=[54, 15], zoom_start=4)
 
-# Add markers for each country
+# Color function based on rank
+def get_color(rank):
+    if rank == 1:
+        return "green"
+    elif rank <= 3:
+        return "orange"
+    else:
+        return "blue"
+
 for _, row in filtered_df.iterrows():
     country = row["country"]
-    if country in country_coords:
-        folium.Marker(
-            location=country_coords[country],
-            popup=f"{country} (Place: {row['final_place']})",
-            icon=folium.Icon(color="blue")
-        ).add_to(m)
+    rank = row["final_place"]
+    coords = country_coords.get(country)
 
+    if not coords:
+        st.warning(f"Coordinates not found for {country}")
+        continue
+
+    if use_style_colors:
+        # Style-based color
+        music_style = str(row.get("style", "")).lower()
+        icon_color = style_colors.get(music_style, "blue")
+        popup = f"<b>{country}</b><br>Rank: {rank}<br>Style: {music_style.title()}"
+    else:
+        # Rank-based color
+        if rank == 1:
+            icon_color = "green"
+        elif rank <= 3:
+            icon_color = "orange"
+        else:
+            icon_color = "blue"
+        popup = f"<b>{country}</b><br>Rank: {rank}"
+
+    folium.Marker(
+        location=coords,
+        popup=popup,
+        tooltip=country,
+        icon=folium.Icon(color=icon_color)
+    ).add_to(m)
+
+    
+# -------------------------
+# Show Map and Data
+# -------------------------
+st.subheader(f"🌍 Eurovision {year} - Top {max_rank}")
 folium_static(m)
+
+
+# -------------------------
+# Table Row Styling Function
+# -------------------------
+def highlight_style(row):
+    color_map = {
+        "pop": "mistyrose",
+        "ballad": "lavender",
+        "traditional": "honeydew",
+        "rock": "lightcoral",
+        "dance": "peachpuff"
+    }
+    style = str(row.get("style", "")).lower()
+    color = color_map.get(style, "white")
+    return [f"background-color: {color}"] * len(row)
+
+with st.expander("📊 View Data Table"):
+    table_data = filtered_df.sort_values("final_place").reset_index(drop=True)
+    
+    if use_style_colors:
+        st.dataframe(table_data.style.apply(highlight_style, axis=1), use_container_width=True)
+    else:
+        st.dataframe(table_data, use_container_width=True)
