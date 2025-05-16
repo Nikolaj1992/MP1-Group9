@@ -5,9 +5,9 @@ Contains:
 - We are primarily analyzing the correlation of the running order of an entry from the Eurovision Song Contest and the final results for that country. We are also taking other factors into consideration like genre, countries etc.
 
 Contributions:
-- Tasks: MP3 notebook setup and data load/prep except for big-5 handling, additional modules plus init structure and setup plus Mean-Shift clustering  - done by Nikolaj
+- Tasks: MP3 notebook setup and data load/prep except for big-5 handling, additional modules plus init structure and setup, Mean-Shift clustering  - done by Nikolaj
 - Linear regression and Naïve Bayes analysis of Eurovision finalists - done by Patrick
-- Linear regression of semifinalists - done by Jenny
+- Linear regression of semifinalists, README and questions - done by Jenny
 - Classification of finalists via Decision Tree and Gradual Boosting Classifiers - done by David
 
 
