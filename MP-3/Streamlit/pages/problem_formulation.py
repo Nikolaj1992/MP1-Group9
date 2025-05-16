@@ -18,7 +18,7 @@ def show_problem_formulation():
 
     st.subheader("3. Supervised Machine Learning: Classification")
     st.markdown("""
-    - Train, test, and validate a classification model to predict whether a Eurovision entry will qualify for the Grand Final based on features such as country, genre, language, and performance slot.  
+    - Train, test, and validate a classification model to predict whether a Eurovision entry will be in Top 10 in the Grand Final based on features performance slot and votes.  
     - Evaluate the model using appropriate accuracy metrics (e.g., accuracy, precision, recall, F1-score).
     """)
 
